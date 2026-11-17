@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPulse Pro | AI Gym & Home Workout Vision Workspace</title>
+    <!-- Tailwind CSS with custom theme extensions -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        gymLime: '#10b981',
+                        gymCyan: '#06b6d4',
+                        gymDarkBg: '#080d16',
+                        gymCard: '#111827',
+                        gymBorder: '#1f293d'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- TensorFlow.js & Teachable Machine Image libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, .font-outfit { font-family: 'Outfit', sans-serif; }
+        .hero-banner {
+            background: linear-gradient(135deg, rgba(8, 13, 22, 0.92) 0%, rgba(17, 24, 39, 0.85) 100%), 
+                        url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+        }
+        .hero-glow {
+            background: radial-gradient(circle at 50% 0%, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.04) 40%, transparent 70%);
+        }
+        .glass-panel {
+            background: rgba(17, 24, 39, 0.82);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+    </style>
+</head>
+<body class="bg-gymDarkBg text-slate-100 min-h-screen flex flex-col justify-between selection:bg-gymLime selection:text-slate-950 hero-glow">
+
+    <!-- Header Section (Visual Hierarchy & Branding) -->
+    <header class="border-b border-gymBorder bg-gymCard/80 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-gymLime to-gymCyan flex items-center justify-center text-slate-950 shadow-lg shadow-gymLime/20">
+                    <i class="fa-solid fa-dumbbell text-xl font-black"></i>
+                </div>
+                <div>
+                    <h1 class="font-outfit font-extrabold text-xl tracking-tight text-white flex items-center gap-2">
+                        FITPULSE <span class="text-[10px] uppercase tracking-widest bg-gymLime/10 text-gymLime border border-gymLime/30 px-2 py-0.5 rounded-full font-bold">Pro Edition</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 font-medium">Teachable Machine AI Computer Vision Suite</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <a href="#community-impact" class="hidden sm:flex text-xs sm:text-sm font-semibold bg-slate-800/80 hover:bg-slate-800 text-slate-200 px-4 py-2.5 rounded-xl border border-slate-700/80 transition items-center space-x-2">
+                    <i class="fa-solid fa-heart-pulse text-gymLime"></i>
+                    <span>Community Significance</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Workout Hero Banner -->
+    <section class="hero-banner border-b border-gymBorder py-12 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="space-y-4 max-w-2xl">
+                <span class="text-gymLime font-outfit font-bold text-xs tracking-widest uppercase bg-gymLime/10 px-3 py-1 rounded-full border border-gymLime/20">Elite Home & Gym AI Suite</span>
+                <h2 class="text-3xl sm:text-5xl font-outfit font-black text-white tracking-tight leading-tight">Elevate Your Workout With Real-Time Vision</h2>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed">Instant browser-based detection for exercise forms, gym equipment, and fitness categories powered by your custom Teachable Machine model.</p>
+            </div>
+            <div class="flex items-center gap-4 bg-gymCard/90 border border-gymBorder p-5 rounded-3xl backdrop-blur-md shadow-xl">
+                <div class="w-12 h-12 rounded-2xl bg-gymLime/10 text-gymLime flex items-center justify-center text-xl font-bold">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-400 font-medium">Active Model ID</p>
+                    <p class="font-mono font-bold text-slate-200 text-sm">yZGdQktP4</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Workspace Container (Balanced 2-Column Grid Layout & Proximity) -->
+    <main class="max-w-7xl mx-auto px-6 py-10 w-full flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Left Column: Vision Console & Input Feeds (8 Cols) -->
+        <div class="lg:col-span-8 space-y-8">
+            
+            <!-- Control Card -->
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-36 h-36 bg-gymLime/5 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+                    <div>
+                        <span class="text-[10px] font-bold tracking-widest uppercase text-gymLime bg-gymLime/10 px-2.5 py-1 rounded-md">Model Ready</span>
+                        <h2 class="text-2xl font-outfit font-bold text-white mt-1">Vision Detection Console</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Initialize weights to begin running inference on camera or uploads.</p>
+                    </div>
+                    <button id="initButton" onclick="initModel()" class="w-full sm:w-auto bg-gymLime hover:bg-emerald-600 text-slate-950 font-extrabold px-6 py-3 rounded-2xl shadow-xl shadow-gymLime/25 transition duration-200 flex items-center justify-center space-x-2 text-sm">
+                        <i class="fa-solid fa-power-off"></i>
+                        <span id="initBtnText">Load Model & Start Feed</span>
+                    </button>
+                </div>
+
+                <!-- Input Switch Tabs -->
+                <div class="flex border-b border-gymBorder mb-6 space-x-6">
+                    <button onclick="switchTab('webcam')" id="tabWebcamBtn" class="pb-3 font-outfit font-semibold text-gymLime border-b-2 border-gymLime transition duration-200 focus:outline-none flex items-center space-x-2 text-sm">
+                        <i class="fa-solid fa-video"></i>
+                        <span>Live Webcam Mode</span>
+                    </button>
+                    <button onclick="switchTab('upload')" id="tabUploadBtn" class="pb-3 font-outfit font-medium text-slate-400 hover:text-slate-200 transition duration-200 focus:outline-none flex items-center space-x-2 text-sm">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Test Image Upload</span>
+                    </button>
+                </div>
+
+                <!-- Webcam Feed Box -->
+                <div id="webcamSection" class="space-y-4">
+                    <div class="relative bg-slate-950 rounded-2xl overflow-hidden aspect-video flex items-center justify-center shadow-inner border border-gymBorder group">
+                        <div id="webcam-container" class="w-full h-full flex items-center justify-center text-center p-6">
+                            <div class="space-y-3">
+                                <div class="w-14 h-14 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-center mx-auto text-slate-500 text-xl shadow">
+                                    <i class="fa-solid fa-camera"></i>
+                                </div>
+                                <p class="text-slate-400 text-sm font-medium">Camera offline. Click "Load Model & Start Feed" above to activate.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Image Upload Box -->
+                <div id="uploadSection" class="hidden space-y-4">
+                    <div class="border-2 border-dashed border-slate-700 hover:border-gymLime/50 rounded-2xl p-8 text-center bg-slate-900/40 transition duration-200 group cursor-pointer">
+                        <input type="file" id="imageUploadInput" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                        <label for="imageUploadInput" class="cursor-pointer flex flex-col items-center">
+                            <div class="w-14 h-14 rounded-2xl bg-slate-800 group-hover:bg-gymLime/10 text-slate-400 group-hover:text-gymLime flex items-center justify-center mb-3 transition duration-200 text-xl">
+                                <i class="fa-solid fa-image"></i>
+                            </div>
+                            <span class="text-sm font-bold text-slate-200">Click to upload fitness or equipment image</span>
+                            <span class="text-xs text-slate-400 mt-1">Supports PNG, JPG, or WEBP up to 10MB</span>
+                        </label>
+                    </div>
+                    <!-- Uploaded Image Preview -->
+                    <div id="imagePreviewContainer" class="hidden relative bg-slate-950 rounded-2xl overflow-hidden aspect-video flex items-center justify-center border border-gymBorder">
+                        <img id="uploadedImage" class="max-h-full max-w-full object-contain" alt="Uploaded Preview">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Real-time Feedback & Visual Confidence Metrics (4 Cols) -->
+        <div class="lg:col-span-4 space-y-6">
+            <div class="glass-panel rounded-3xl p-6 sm:p-8 shadow-2xl sticky top-28">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-outfit font-bold text-lg text-white">Confidence Breakdown</h3>
+                    <span id="statusBadge" class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                        Standby
+                    </span>
+                </div>
+                <p class="text-xs text-slate-400 mb-6">Real-time probability metrics evaluated instantly via browser inference.</p>
+                
+                <!-- Prediction Bars Container -->
+                <div id="label-container" class="space-y-4">
+                    <div class="text-center py-12 text-slate-500 text-xs font-medium border border-dashed border-slate-800 rounded-2xl bg-slate-900/20">
+                        <i class="fa-solid fa-chart-bar text-2xl mb-2 block text-slate-600"></i>
+                        Model awaiting initialization...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Dedicated Gym / Home Workout Plan Section -->
+    <section class="max-w-7xl mx-auto px-6 py-12 w-full">
+        <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-gymBorder relative overflow-hidden">
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-gymCyan/5 rounded-full blur-3xl pointer-events-none"></div>
+            
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10">
+                <div>
+                    <span class="text-gymCyan font-outfit font-bold text-xs tracking-widest uppercase bg-gymCyan/10 px-3 py-1 rounded-full border border-gymCyan/20">Structured Routine</span>
+                    <h2 class="text-2xl sm:text-3xl font-outfit font-extrabold text-white mt-3">Gym & Home Workout Plan</h2>
+                    <p class="text-slate-400 text-sm mt-1">Pair your AI vision model with our expert hypertrophy and conditioning splits.</p>
+                </div>
+                <!-- Plan Toggle Buttons -->
+                <div class="flex bg-slate-900/80 p-1.5 rounded-2xl border border-gymBorder">
+                    <button onclick="switchWorkoutPlan('gym')" id="planGymBtn" class="px-5 py-2.5 rounded-xl font-outfit font-semibold text-xs sm:text-sm bg-gymLime text-slate-950 shadow transition">Commercial Gym Split</button>
+                    <button onclick="switchWorkoutPlan('home')" id="planHomeBtn" class="px-5 py-2.5 rounded-xl font-outfit font-medium text-xs sm:text-sm text-slate-400 hover:text-white transition">Home Bodyweight Split</button>
+                </div>
+            </div>
+
+            <!-- Gym Plan View -->
+            <div id="gymPlanView" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-gymBorder space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-gymLime uppercase tracking-wider">Day 1</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Upper Body</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg">Push & Pull Power</h3>
+                    <ul class="text-xs text-slate-400 space-y-2 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Barbell Bench Press (4 x 8-10)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Lat Pulldowns (4 x 10-12)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Overhead Shoulder Press (3 x 10)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Cable Bicep & Tricep Supersets</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-gymBorder space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-gymCyan uppercase tracking-wider">Day 2</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Lower Body</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg">Lower Leg Foundation</h3>
+                    <ul class="text-xs text-slate-400 space-y-2 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Barbell Back Squats (4 x 6-8)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Romanian Deadlifts (4 x 8-10)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Leg Press Machine (3 x 12)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Standing Calf Raises (4 x 15)</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-gymBorder space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Day 3</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Conditioning</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg">Functional & Core</h3>
+                    <ul class="text-xs text-slate-400 space-y-2 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> Dumbbell Thrusters (3 x 10)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> Weighted Planks (3 x 60 sec)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> Kettlebell Swings (4 x 15)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> HIIT Row Intervals (15 mins)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Home Plan View (Hidden by default) -->
+            <div id="homePlanView" class="hidden grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-gymBorder space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-gymLime uppercase tracking-wider">Session A</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Bodyweight Upper</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg">Home Calisthenics Push</h3>
+                    <ul class="text-xs text-slate-400 space-y-2 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Decline / Standard Push-ups (4 x 15)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Pike Push-ups for Shoulders (3 x 10)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Chair Dips for Triceps (3 x 12)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymLime text-[10px]"></i> Isometric Plank Holds (3 x 45s)</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-gymBorder space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-gymCyan uppercase tracking-wider">Session B</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Bodyweight Lower</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg">Legs & Stability</h3>
+                    <ul class="text-xs text-slate-400 space-y-2 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Bulgarian Split Squats (3 x 10 / leg)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Single-Leg Glute Bridges (3 x 15)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Jump Squats for Explosiveness (3 x 10)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-gymCyan text-[10px]"></i> Walking Lunges (3 x 20 steps)</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-900/60 p-6 rounded-2xl border border-gymBorder space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">Session C</span>
+                        <span class="text-[10px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded">Core & Mobility</span>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg">Core Strength & Flow</h3>
+                    <ul class="text-xs text-slate-400 space-y-2 pt-2">
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> Bicycle Crunches (3 x 20)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> Mountain Climbers (3 x 45s)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> Dead Bugs (3 x 12)</li>
+                        <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-amber-400 text-[10px]"></i> Full Body Dynamic Stretching (10m)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dedicated Community Significance Section (Structured Grid & Rhythm) -->
+    <section id="community-impact" class="border-t border-gymBorder bg-gymCard/30 py-20 px-6 mt-16">
+        <div class="max-w-6xl mx-auto">
+            <div class="max-w-2xl mx-auto text-center mb-16">
+                <span class="text-gymLime font-outfit font-bold text-xs tracking-widest uppercase bg-gymLime/10 px-3 py-1 rounded-full border border-gymLime/20">Community Significance</span>
+                <h2 class="text-3xl sm:text-4xl font-outfit font-extrabold text-white mt-4 tracking-tight">Empowering Home Workouts & Local Fitness</h2>
+                <p class="text-slate-400 mt-3 text-sm sm:text-base leading-relaxed">Democratizing machine learning to provide secure, accessible, and zero-cost technological aids for fitness enthusiasts, personal trainers, and home athletes.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Card 1 -->
+                <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group hover:border-gymLime/30 transition duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-gymLime/10 text-gymLime flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-gymLime/5">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg mb-3">Total Data Privacy</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Because inference runs 100% client-side via TensorFlow.js, sensitive home webcam feeds and workout photos never leave the user's device or touch a remote server.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group hover:border-gymCyan/30 transition duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-gymCyan/10 text-gymCyan flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-gymCyan/5">
+                        <i class="fa-solid fa-bolt-lightning"></i>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg mb-3">Zero Infrastructure Cost</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Hosted effortlessly via GitHub Pages with zero recurring server expenses, making community fitness tools and educational prototypes sustainable and free.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="glass-panel p-8 rounded-3xl relative overflow-hidden group hover:border-emerald-500/30 transition duration-300">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-lg mb-6 shadow-md shadow-emerald-500/5">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="font-outfit font-bold text-white text-lg mb-3">Accessibility & Education</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed">Empowers grassroots athletes, trainers, and students to build and test custom computer vision classifiers instantly without complex backend coding.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-gymBorder py-8 text-center text-xs text-slate-500 bg-gymCard/80">
+        <p>FitPulse Pro Gym Workspace • Model URL: <code class="text-slate-400">https://teachablemachine.withgoogle.com/models/yZGdQktP4/</code> • Ready for GitHub Pages</p>
+    </footer>
+
+    <!-- Application JavaScript Logic -->
+    <script>
+        // Exact Teachable Machine Model URL provided by user
+        const URL = "https://teachablemachine.withgoogle.com/models/yZGdQktP4/";
+
+        let model, webcam, labelContainer, maxPredictions;
+        let currentMode = 'webcam'; // 'webcam' or 'upload'
+        let isModelLoaded = false;
+        let animationFrameId = null;
+
+        // Switch Workout Plans between Gym and Home
+        function switchWorkoutPlan(type) {
+            const gymView = document.getElementById('gymPlanView');
+            const homeView = document.getElementById('homePlanView');
+            const gymBtn = document.getElementById('planGymBtn');
+            const homeBtn = document.getElementById('planHomeBtn');
+
+            if (type === 'gym') {
+                gymView.classList.remove('hidden');
+                homeView.classList.add('hidden');
+                gymBtn.className = "px-5 py-2.5 rounded-xl font-outfit font-semibold text-xs sm:text-sm bg-gymLime text-slate-950 shadow transition";
+                homeBtn.className = "px-5 py-2.5 rounded-xl font-outfit font-medium text-xs sm:text-sm text-slate-400 hover:text-white transition";
+            } else {
+                gymView.classList.add('hidden');
+                homeView.classList.remove('hidden');
+                homeBtn.className = "px-5 py-2.5 rounded-xl font-outfit font-semibold text-xs sm:text-sm bg-gymCyan text-slate-950 shadow transition";
+                gymBtn.className = "px-5 py-2.5 rounded-xl font-outfit font-medium text-xs sm:text-sm text-slate-400 hover:text-white transition";
+            }
+        }
+
+        // Switch between Webcam mode and Upload testing mode
+        function switchTab(mode) {
+            currentMode = mode;
+            const webcamSec = document.getElementById('webcamSection');
+            const uploadSec = document.getElementById('uploadSection');
+            const tabWebcamBtn = document.getElementById('tabWebcamBtn');
+            const tabUploadBtn = document.getElementById('tabUploadBtn');
+
+            if (mode === 'webcam') {
+                webcamSec.classList.remove('hidden');
+                uploadSec.classList.add('hidden');
+                tabWebcamBtn.className = "pb-3 font-outfit font-semibold text-gymLime border-b-2 border-gymLime transition duration-200 focus:outline-none flex items-center space-x-2 text-sm";
+                tabUploadBtn.className = "pb-3 font-outfit font-medium text-slate-400 hover:text-slate-200 transition duration-200 focus:outline-none flex items-center space-x-2 text-sm";
+                
+                if (isModelLoaded && webcam) {
+                    startWebcamLoop();
+                }
+            } else {
+                webcamSec.classList.add('hidden');
+                uploadSec.classList.remove('hidden');
+                tabUploadBtn.className = "pb-3 font-outfit font-semibold text-gymLime border-b-2 border-gymLime transition duration-200 focus:outline-none flex items-center space-x-2 text-sm";
+                tabWebcamBtn.className = "pb-3 font-outfit font-medium text-slate-400 hover:text-slate-200 transition duration-200 focus:outline-none flex items-center space-x-2 text-sm";
+                
+                if (animationFrameId) {
+                    cancelAnimationFrame(animationFrameId);
+                }
+                if (webcam && webcam.canvas) {
+                    webcam.pause();
+                }
+            }
+        }
+
+        // Initialize Teachable Machine Model & Webcam
+        async function initModel() {
+            if (isModelLoaded) return;
+            
+            const initBtnText = document.getElementById('initBtnText');
+            const initButton = document.getElementById('initButton');
+            const statusBadge = document.getElementById('statusBadge');
+            
+            initBtnText.innerText = "Loading Weights...";
+            initButton.disabled = true;
+
+            try {
+                const modelURL = URL + "model.json";
+                const metadataURL = URL + "metadata.json";
+
+                // Load model
+                model = await tmImage.load(modelURL, metadataURL);
+                maxPredictions = model.getTotalClasses();
+
+                // Setup Webcam
+                const flip = true;
+                webcam = new tmImage.Webcam(420, 315, flip);
+                await webcam.setup();
+                await webcam.play();
+                
+                isModelLoaded = true;
+                initBtnText.innerText = "System Active";
+                initButton.className = "w-full sm:w-auto bg-emerald-500 text-slate-950 font-extrabold px-6 py-3 rounded-2xl shadow-xl flex items-center justify-center space-x-2 cursor-default";
+                
+                statusBadge.innerText = "Running Live";
+                statusBadge.className = "inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+
+                // Append webcam canvas
+                const webcamContainer = document.getElementById("webcam-container");
+                webcamContainer.innerHTML = "";
+                webcamContainer.appendChild(webcam.canvas);
+
+                // Initialize label results container UI elements
+                labelContainer = document.getElementById("label-container");
+                labelContainer.innerHTML = "";
+                for (let i = 0; i < maxPredictions; i++) {
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "space-y-1.5 bg-slate-900/60 p-3.5 rounded-2xl border border-gymBorder";
+                    wrapper.innerHTML = `
+                        <div class="flex justify-between text-xs font-outfit font-semibold">
+                            <span id="label-name-${i}" class="text-slate-200">Class ${i+1}</span>
+                            <span id="label-val-${i}" class="text-gymLime font-mono font-bold">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden">
+                            <div id="label-bar-${i}" class="bg-gradient-to-r from-gymCyan to-gymLime h-2 rounded-full transition-all duration-75" style="width: 0%"></div>
+                        </div>
+                    `;
+                    labelContainer.appendChild(wrapper);
+                }
+
+                // Start prediction loop
+                startWebcamLoop();
+
+            } catch (error) {
+                console.error("Initialization error:", error);
+                initBtnText.innerText = "Load Failed";
+                initButton.disabled = false;
+                statusBadge.innerText = "Error";
+                statusBadge.className = "inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20";
+                alert("Could not load model or access camera. Please check browser camera permissions or internet connection.");
+            }
+        }
+
+        // Webcam continuous loop handler
+        async function startWebcamLoop() {
+            if (currentMode !== 'webcam') return;
+            webcam.update();
+            await predictWebcam();
+            animationFrameId = window.requestAnimationFrame(startWebcamLoop);
+        }
+
+        // Run prediction on webcam frame
+        async function predictWebcam() {
+            if (!model || !webcam) return;
+            const predictions = await model.predict(webcam.canvas);
+            updateUIpredictions(predictions);
+        }
+
+        // Handle uploaded image file testing
+        async function handleImageUpload(event) {
+            if (!isModelLoaded) {
+                alert("Please click 'Load Model & Start Feed' first before testing uploaded files.");
+                event.target.value = "";
+                return;
+            }
+
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async function (e) {
+                const previewContainer = document.getElementById('imagePreviewContainer');
+                const uploadedImage = document.getElementById('uploadedImage');
+                
+                uploadedImage.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+
+                uploadedImage.onload = async function () {
+                    const predictions = await model.predict(uploadedImage);
+                    updateUIpredictions(predictions);
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+
+        // Update probability progress bars and labels cleanly
+        function updateUIpredictions(predictions) {
+            for (let i = 0; i < maxPredictions; i++) {
+                const className = predictions[i].className;
+                const probability = (predictions[i].probability * 100).toFixed(1);
+
+                const nameElement = document.getElementById(`label-name-${i}`);
+                const valElement = document.getElementById(`label-val-${i}`);
+                const barElement = document.getElementById(`label-bar-${i}`);
+
+                if (nameElement && valElement && barElement) {
+                    nameElement.innerText = className;
+                    valElement.innerText = `${probability}%`;
+                    barElement.style.width = `${probability}%`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
